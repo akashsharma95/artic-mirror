@@ -1,0 +1,18 @@
+postgres:
+  host: localhost
+  port: 5432
+  user: replicator
+  password: secret
+  database: mydb
+  slot: iceberg_replica
+  publication: pub_all
+
+tables:
+  - schema: public
+    name: users
+
+iceberg:
+  path: /tmp/warehouse
+
+proxy:
+  port: 5433
