@@ -1,14 +1,15 @@
 package replication
 
 import (
-	"arctic-mirror/config"
-	"arctic-mirror/iceberg"
-	"arctic-mirror/schema"
 	"context"
 	"errors"
 	"fmt"
 	"log"
 	"time"
+
+	"arctic-mirror/config"
+	"arctic-mirror/iceberg"
+	"arctic-mirror/schema"
 
 	"github.com/jackc/pglogrepl"
 	"github.com/jackc/pgx/v5"

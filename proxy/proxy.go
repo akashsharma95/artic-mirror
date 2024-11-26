@@ -1,13 +1,15 @@
 package proxy
 
 import (
-	"arctic-mirror/config"
 	"context"
 	"database/sql"
 	"fmt"
+	"net"
+
+	"arctic-mirror/config"
+
 	"github.com/jackc/pgx/v5/pgproto3"
 	_ "github.com/marcboeker/go-duckdb"
-	"net"
 )
 
 type DuckDBProxy struct {

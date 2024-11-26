@@ -1,18 +1,19 @@
 package iceberg
 
 import (
-	"arctic-mirror/schema"
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/jackc/pgx/v5/pgtype"
 	"os"
 	"path/filepath"
 	"sync"
 	"time"
 
+	"arctic-mirror/schema"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pglogrepl"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/parquet-go/parquet-go"
 )
 

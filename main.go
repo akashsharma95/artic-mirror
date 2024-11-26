@@ -1,8 +1,6 @@
 package main
 
 import (
-	"arctic-mirror/proxy"
-	"arctic-mirror/replication"
 	"context"
 	"flag"
 	"log"
@@ -11,6 +9,8 @@ import (
 	"syscall"
 
 	"arctic-mirror/config"
+	"arctic-mirror/proxy"
+	"arctic-mirror/replication"
 )
 
 func main() {
