@@ -16,6 +16,7 @@ type S3Storage struct {
 	client *s3.Client
 	bucket string
 	prefix string
+	buffer *Buffer
 }
 
 func NewS3Storage(client *s3.Client, bucket, prefix string) *S3Storage {
@@ -23,26 +24,32 @@ func NewS3Storage(client *s3.Client, bucket, prefix string) *S3Storage {
 		client: client,
 		bucket: bucket,
 		prefix: prefix,
+		buffer: NewBuffer(),
 	}
 }
 
 func (s *S3Storage) Write(ctx context.Context, filepath string, data io.Reader) error {
 	fullPath := path.Join(s.prefix, filepath)
 
-	// Convert io.Reader to []byte for PutObject
-	buf := new(bytes.Buffer)
-	if _, err := io.Copy(buf, data); err != nil {
-		return fmt.Errorf("copying data: %w", err)
+	// Write data to buffer
+	if _, err := io.Copy(s.buffer, data); err != nil {
+		return fmt.Errorf("copying data to buffer: %w", err)
 	}
+
+	// Read data from buffer
+	bufferData := s.buffer.Reader()
 
 	_, err := s.client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(s.bucket),
 		Key:    aws.String(fullPath),
-		Body:   bytes.NewReader(buf.Bytes()),
+		Body:   bufferData,
 	})
 	if err != nil {
 		return fmt.Errorf("putting object: %w", err)
 	}
+
+	// Reset buffer after writing to S3
+	s.buffer.Reset()
 
 	return nil
 }

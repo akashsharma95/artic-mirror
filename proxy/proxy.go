@@ -75,9 +75,18 @@ func (p *DuckDBProxy) handleConnection(ctx context.Context, conn net.Conn) {
 	backend := pgproto3.NewBackend(conn, conn)
 
 	// Handle startup
-	_, err := backend.ReceiveStartupMessage()
+	startupMessage, err := backend.ReceiveStartupMessage()
 	if err != nil {
 		return
+	}
+
+	// Handle Postgres client version queries
+	if startupMessage, ok := startupMessage.(*pgproto3.StartupMessage); ok {
+		if version, exists := startupMessage.Parameters["client_encoding"]; exists {
+			if version == "UTF8" {
+				backend.Send(&pgproto3.ParameterStatus{Name: "client_encoding", Value: "UTF8"})
+			}
+		}
 	}
 
 	// Send authentication OK
